@@ -33,10 +33,7 @@
       <a v-else class="right" @click="fullScreen=!fullScreen"><i class="material-icons">fullscreen_exit</i></a>
     </div>
   </nav>
-  <div>{{fullScreen}}
-    <div v-if="!selectedFiles.length">Выберите директорию с изображениями</div>
-    <div v-else>{{ selectedFiles[0] }}</div>
-  </div>
+  
 </template>
 
 <script>

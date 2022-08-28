@@ -1,13 +1,15 @@
 <template>
   <main>
     <Navbar />
+    <Screen />
   </main>
 </template>
 
 <script>
 import Navbar from "@/components/Navbar";
+import Screen from "@/components/Screen";
 export default {
-  components: { Navbar },
+  components: { Navbar, Screen },
 };
 </script>
 
