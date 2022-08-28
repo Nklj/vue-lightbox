@@ -18,13 +18,15 @@ export default createStore({
         "selectedFiles",
         JSON.stringify(state.selectedFiles)
       );
+      
     },
     updateSelectedScreen(state, screen) {
       state.selectedScreen = screen;
       localStorage.setItem("selectedScreen", screen);
     },
-    updateFullScreen(state, fullScreen) {
-      state.fullScreen = fullScreen;
+    updateFullScreen(state) {
+      state.fullScreen = !state.fullScreen;
+     
     },
   },
   actions: {
@@ -34,8 +36,8 @@ export default createStore({
     updateSelectedScreen({ commit }, screen) {
       commit("updateSelectedScreen", screen);
     },
-    updateFullScreen({ commit }, fullScreen) {
-      commit("updateFullScreen", fullScreen);
+    updateFullScreen({ commit }) {
+      commit("updateFullScreen");
     },
   },
 });
