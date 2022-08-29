@@ -6,7 +6,7 @@
           <input
             type="file"
             id="file-input"
-            accept="image/*,.pdf"
+            accept="image/*"
             multiple
             webkitdirectory
             directory
@@ -19,8 +19,8 @@
         <li :class="{ active: selectedScreen === 'fill' }">
           <a><i class="material-icons" id="fill">zoom_out_map</i></a>
         </li>
-        <li :class="{ active: selectedScreen === '1:1' }">
-          <a><i id="1:1">1:1</i></a>
+        <li :class="{ active: selectedScreen === 'oneOne' }">
+          <a><i id="oneOne">1:1</i></a>
         </li>
         <li :class="{ active: selectedScreen === 'horiz' }">
           <a><i class="material-icons" id="horiz">swap_horiz</i></a>
@@ -50,13 +50,13 @@ export default {
   methods: {
     onFileSelecter(event) {
       const onlyImages = [...event.target.files].filter((file) =>
-        /image|pdf/g.test(file.type)
+        /image/g.test(file.type)
       );
    
       this.$store.dispatch("uploudFiles", onlyImages);
     },
     screenChooser(event) {
-      if (/fill|horiz|vert|1:1/g.test(event.target.id)) {
+      if (/fill|horiz|vert|oneOne/g.test(event.target.id)) {
        
         this.$store.dispatch("updateSelectedScreen", event.target.id);
       }

@@ -18,7 +18,9 @@
           </svg>
         </div>
         <div class="lightbox-image">
-          <img :src="selectedFiles[index].webkitRelativePath" />
+          <canvas id="canvas" ref="canvas"></canvas>
+          <!-- <img :class="classScreen" :src="img_link" /> -->
+          <img :src="img_link" ref="pic" />
         </div>
         <div @click="next" class="arrow next" v-if="hasNext">
           <svg
@@ -39,6 +41,18 @@
 
 <script>
 export default {
+  data() {
+    return {
+      index: 0,
+      classScreen: {
+        fill: false,
+        oneOne: false,
+        horiz: false,
+        vert: false,
+      },
+      img_link: "",
+    };
+  },
   computed: {
     selectedScreen() {
       return this.$store.getters.selectedScreen;
@@ -47,8 +61,10 @@ export default {
       return this.$store.getters.fullScreen;
     },
     selectedFiles() {
+      this.index = 0;
       return this.$store.getters.selectedFiles;
     },
+
     hasNext() {
       return this.index + 1 < this.selectedFiles.length;
     },
@@ -56,11 +72,22 @@ export default {
       return this.index - 1 >= 0;
     },
   },
-  data() {
-    return {
-      index: 0,
-    };
+
+  watch: {
+    selectedScreen: function (val, preval) {
+      this.classScreen[preval] = false;
+      this.classScreen[val] = true;
+      this.getLocalImage();
+    },
+    index: function (val) {
+      localStorage.setItem("index", val);
+      this.getLocalImage();
+    },
+    selectedFiles: function () {
+      this.getLocalImage();
+    },
   },
+
   methods: {
     prev() {
       if (this.hasPrev) {
@@ -87,9 +114,54 @@ export default {
           break;
       }
     },
+    getLocalImage() {
+      if (this.selectedFiles.length) {
+        this.img = new Image();
+        this.img.src = window.URL.createObjectURL(
+          this.selectedFiles[this.index]
+        );
+
+        this.img.onload = () => {
+          this.imgWidth = this.img.naturalWidth;
+          this.imgHeight = this.img.naturalHeight;
+          this.imgRatio = this.imgWidth / this.imgHeight;
+          this.W = window.innerWidth;
+          this.H = window.innerHeight;
+
+          switch (this.selectedScreen) {
+            case "fill":
+              this.width = this.W;
+              this.height = this.H;
+              break;
+            case "oneOne":
+              this.width = this.imgWidth;
+              this.height = this.imgHeight;
+              break;
+            case "horiz":
+              this.width = this.W;
+              this.height = this.width / this.imgRatio;
+              break;
+            case "vert":
+              this.height = this.H;
+              this.width = this.height * this.imgRatio;
+              break;
+          }
+
+          window.URL.revokeObjectURL(this.img.src);
+          this.c = this.$refs.canvas;
+          this.c.width = this.width;
+          this.c.height = this.height;
+          this.ctx = this.c.getContext("2d");
+          this.ctx.drawImage(this.img, 0, 0, this.width, this.height);
+          this.img_link = canvas.toDataURL();
+        };
+      }
+    },
   },
   mounted() {
     window.addEventListener("keydown", this.onKeydown);
+    this.classScreen[this.selectedScreen] = true;
+    this.index = +localStorage.getItem("index") || 0;
   },
   unmounted() {
     window.removeEventListener("keydown", this.onKeydown);
@@ -110,10 +182,6 @@ h3 {
   align-content: center;
   justify-content: center;
 }
-.lightbox-image img {
-  width: 100%;
-  height: auto;
-}
 .arrow {
   position: absolute;
   z-index: 10;
@@ -123,5 +191,8 @@ h3 {
 }
 .next {
   right: 0;
+}
+canvas {
+  display: none;
 }
 </style>

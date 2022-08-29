@@ -2,9 +2,11 @@ import { createStore } from "vuex";
 
 export default createStore({
   state: {
-    selectedFiles: JSON.parse(localStorage.getItem("selectedFiles") || "[]"),
+    //selectedFiles: JSON.parse(localStorage.getItem("selectedFiles") || "[]"),
+    selectedFiles:  [],
     selectedScreen: localStorage.getItem("selectedScreen") || "fill",
     fullScreen: false,
+    
   },
   getters: {
     selectedFiles: (s) => s.selectedFiles,
@@ -13,11 +15,11 @@ export default createStore({
   },
   mutations: {
     uploudFiles(state, files) {
-      state.selectedFiles = files;
-      localStorage.setItem(
-        "selectedFiles",
-        JSON.stringify(state.selectedFiles)
-      );
+      state.selectedFiles = files;      
+      // localStorage.setItem(
+      //   "selectedFiles",
+      //   JSON.stringify(state.selectedFiles)
+      //);
       
     },
     updateSelectedScreen(state, screen) {
@@ -41,3 +43,6 @@ export default createStore({
     },
   },
 });
+
+//http://localhost:8080/7320ba7b-e609-469b-a3e6-74723cc6d057
+//.map(file=>window.URL.createObjectURL( file ))
