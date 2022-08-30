@@ -1,19 +1,5 @@
 # vue-lightbox
 
-## Project setup
-```
-npm install
-```
+Веб приложение для просмотра локальных изображений
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+demo: https://nklj.github.io/vue-lightbox/
