@@ -17,8 +17,7 @@
             <path d="M0-.5h24v24H0z" fill="none" />
           </svg>
         </div>
-        <div class="lightbox-image">
-          {{ index }}
+        <div class="lightbox-image">          
           <canvas id="canvas" ref="canvas"></canvas>
           <img :src="img_link" ref="pic" />
         </div>
@@ -61,11 +60,7 @@ export default {
       return this.$store.getters.fullScreen;
     },
     selectedFiles() {
-      const files = this.$store.getters.selectedFiles;
-      if (files.length < this.index) {
-        console.log(+localStorage.getItem("index"))
-        this.index = 0;
-      }
+      const files = this.$store.getters.selectedFiles;      
       return files;
     },
 
@@ -88,6 +83,10 @@ export default {
       this.getLocalImage();
     },
     selectedFiles: function () {
+      const files = this.$store.getters.selectedFiles;
+      if (files.length < this.index) {        
+        this.index = 0;
+      }
       this.getLocalImage();
     },
   },
