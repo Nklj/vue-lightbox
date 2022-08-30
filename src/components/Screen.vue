@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="!selectedFiles.length">
-      <h3>Выберите директорию с изображениями</h3>
+      <h3>Выберите директорию с изображениями{{ $store.selectedFiles }}</h3>
     </div>
     <div v-else class="lightbox">
       <div class="lightbox-container">
@@ -18,8 +18,8 @@
           </svg>
         </div>
         <div class="lightbox-image">
+          {{ index }}
           <canvas id="canvas" ref="canvas"></canvas>
-          <!-- <img :class="classScreen" :src="img_link" /> -->
           <img :src="img_link" ref="pic" />
         </div>
         <div @click="next" class="arrow next" v-if="hasNext">
@@ -43,7 +43,7 @@
 export default {
   data() {
     return {
-      index: 0,
+      index: +localStorage.getItem("index") || 0,
       classScreen: {
         fill: false,
         oneOne: false,
@@ -61,8 +61,12 @@ export default {
       return this.$store.getters.fullScreen;
     },
     selectedFiles() {
-      this.index = 0;
-      return this.$store.getters.selectedFiles;
+      const files = this.$store.getters.selectedFiles;
+      if (files.length < this.index) {
+        console.log(+localStorage.getItem("index"))
+        this.index = 0;
+      }
+      return files;
     },
 
     hasNext() {
@@ -125,7 +129,7 @@ export default {
           this.imgWidth = this.img.naturalWidth;
           this.imgHeight = this.img.naturalHeight;
           this.imgRatio = this.imgWidth / this.imgHeight;
-          this.W = window.innerWidth;
+          this.W = window.innerWidth - 17;
           this.H = window.innerHeight;
 
           switch (this.selectedScreen) {
@@ -158,10 +162,12 @@ export default {
       }
     },
   },
+
   mounted() {
+    this.$store.dispatch("getImgs");
     window.addEventListener("keydown", this.onKeydown);
     this.classScreen[this.selectedScreen] = true;
-    this.index = +localStorage.getItem("index") || 0;
+    //this.index = +localStorage.getItem("index") || 0;
   },
   unmounted() {
     window.removeEventListener("keydown", this.onKeydown);

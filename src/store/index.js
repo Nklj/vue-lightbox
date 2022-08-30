@@ -1,8 +1,8 @@
 import { createStore } from "vuex";
+import api from '@/api/idb'
 
 export default createStore({
-  state: {
-    //selectedFiles: JSON.parse(localStorage.getItem("selectedFiles") || "[]"),
+  state: {    
     selectedFiles:  [],
     selectedScreen: localStorage.getItem("selectedScreen") || "fill",
     fullScreen: false,
@@ -14,12 +14,12 @@ export default createStore({
     fullScreen: (s) => s.fullScreen,
   },
   mutations: {
+    setImgs(state, imgs) {
+      state.selectedFiles = imgs[imgs.length-1]||[];
+    },
+
     uploudFiles(state, files) {
-      state.selectedFiles = files;      
-      // localStorage.setItem(
-      //   "selectedFiles",
-      //   JSON.stringify(state.selectedFiles)
-      //);
+      state.selectedFiles = files;       
       
     },
     updateSelectedScreen(state, screen) {
@@ -32,7 +32,13 @@ export default createStore({
     },
   },
   actions: {
-    uploudFiles({ commit }, files) {
+    async getImgs ({ commit }) {
+      let imgs = await api.getImgs()
+      commit('setImgs', imgs)
+    },
+
+    async uploudFiles({ commit }, files) {      
+      await api.saveImgs(files)
       commit("uploudFiles", files);
     },
     updateSelectedScreen({ commit }, screen) {
@@ -44,5 +50,3 @@ export default createStore({
   },
 });
 
-//http://localhost:8080/7320ba7b-e609-469b-a3e6-74723cc6d057
-//.map(file=>window.URL.createObjectURL( file ))
